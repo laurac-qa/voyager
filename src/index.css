@@ -104,6 +104,111 @@ body {
   color: var(--accent);
 }
 
+.hero-section {
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero-intro {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-copy {
+  margin: 1rem 0 1.25rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.hero-cta {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.hero-cta:hover {
+  background: #8f2ce8;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.trip-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.trip-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 16px;
+  background: var(--accent-bg);
+  box-shadow: var(--shadow);
+  min-height: auto;
+  justify-content: flex-start;
+}
+
+.trip-card h3 {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 1.2rem;
+  min-height: 2.9em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.trip-dates {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 600;
+  min-height: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trip-summary {
+  margin: 0;
+  line-height: 1.4;
+  color: var(--text);
+  min-height: 0;
+}
+
+.trip-button {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.trip-button:hover {
+  background: #8f2ce8;
+}
+
 h1,
 h2 {
   font-family: var(--heading);
