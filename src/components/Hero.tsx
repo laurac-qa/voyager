@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 function Hero() {
+  const navigate = useNavigate();
   return (
     <section className="hero">
       <p className="hero-tagline">Travel Planning Made Simple</p>
@@ -16,8 +18,12 @@ function Hero() {
         Create itineraries, keep track of destinations, and make every
         journey memorable.
       </p>
-
-      <button type="button" className="hero-button">
+      
+      <button
+        type="button"
+        className="hero-button"
+        onClick={() => navigate("/trips")}
+      >
         Start Planning
       </button>
     </section>
