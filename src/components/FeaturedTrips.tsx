@@ -1,5 +1,5 @@
-import TripCard from "./TripCard";
 import { trips } from "../data/trips";
+import TripCard from "./TripCard";
 
 function FeaturedTrips() {
   return (
@@ -7,9 +7,7 @@ function FeaturedTrips() {
       {trips.map((trip) => (
         <TripCard
           key={trip.title}
-          title={trip.title}
-          dates={trip.dates}
-          summary={trip.summary}
+          trip={trip}
         />
       ))}
     </section>

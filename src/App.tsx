@@ -6,9 +6,11 @@ function App() {
   return (
     <div className="app-shell">
       <Navbar />
+
       <main className="app-main">
         <Home />
       </main>
+
       <Footer />
     </div>
   );
