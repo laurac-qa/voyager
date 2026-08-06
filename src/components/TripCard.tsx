@@ -1,4 +1,5 @@
 import type { Trip } from "../types/trip";
+import { Link } from "react-router-dom";
 
 interface TripCardProps {
   trip: Trip;
@@ -22,12 +23,9 @@ function TripCard({ trip }: TripCardProps) {
         {shortenedSummary}
       </p>
 
-      <button
-        type="button"
-        className="trip-button"
-      >
+      <Link to={`/trips/${trip.id}`} className="trip-button">
         View Trip
-      </button>
+      </Link>
     </article>
   );
 }
