@@ -1,55 +1,33 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
+import { HomePage } from "./pages/HomePage";
+import { TripsPage } from "./pages/TripsPage";
+import { TripDetailsPage } from "./pages/TripDetailsPage";
 
 test("user can start planning a trip", async ({ page }) => {
-  await page.goto("/");
+  const homePage = new HomePage(page);
+  const tripsPage = new TripsPage(page);
 
-  await expect(
-    page.getByRole("heading", { level: 1 })
-  ).toBeVisible();
+  await homePage.open();
+  await homePage.expectLoaded();
 
-  await page.getByRole("button", {
-    name: "Start Planning",
-  }).click();
+  await homePage.clickStartPlanning();
 
-  await expect(page).toHaveURL("/trips");
-
-  await expect(
-    page.getByRole("heading", {
-      name: "My Trips",
-    })
-  ).toBeVisible();
+  await tripsPage.expectLoaded();
 });
 
 test("user can open a trip from the home page", async ({ page }) => {
-  await page.goto("/");
+  const homePage = new HomePage(page);
+  const tripDetailsPage = new TripDetailsPage(page);
 
-  await expect(
-    page.getByRole("heading", { level: 1 })
-  ).toBeVisible();
+  await homePage.open();
+  await homePage.expectLoaded();
 
-  await page.getByRole("link", {
-    name: "View Trip",
-  }).first().click();
+  await homePage.openFirstTrip();
 
-  await expect(page).toHaveURL("/trips/1");
-
-  await expect(
-    page.getByRole("heading", {
-      name: "Santorini, Greece",
-    })
-  ).toBeVisible();
-
-  await expect(
-
-    page.getByText(
-         "Jun 14 – Jun 21, 2026",
-    )
-  ).toBeVisible();
-
-  await expect(
-    page.getByText(
-      "Sunset dinners, cliffside villages, and a sail around the caldera."
-    )
-  ).toBeVisible();
-
+  await tripDetailsPage.expectTrip({
+    id: "1",
+    title: "Santorini, Greece",
+    dates: "Jun 14 – Jun 21, 2026",
+    summary: "Sunset dinners, cliffside villages, and a sail around the caldera.",
+  });
 });
