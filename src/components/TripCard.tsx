@@ -23,7 +23,11 @@ function TripCard({ trip }: TripCardProps) {
         {shortenedSummary}
       </p>
 
-      <Link to={`/trips/${trip.id}`} className="trip-button">
+      <Link
+        to={`/trips/${trip.id}`}
+        className="trip-button"
+        data-testid={`view-trip-${trip.id}`}
+        >
         View Trip
       </Link>
     </article>

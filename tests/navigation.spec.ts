@@ -1,33 +1,72 @@
-import { test } from "@playwright/test";
-import { HomePage } from "./pages/HomePage";
-import { TripsPage } from "./pages/TripsPage";
-import { TripDetailsPage } from "./pages/TripDetailsPage";
+import { test } from "./fixtures";
 
-test("user can start planning a trip", async ({ page }) => {
-  const homePage = new HomePage(page);
-  const tripsPage = new TripsPage(page);
+test.describe("Navigation", () => {
 
-  await homePage.open();
-  await homePage.expectLoaded();
+  test("user can start planning a trip", async ({ homePage, tripsPage }) => {
 
-  await homePage.clickStartPlanning();
+    await test.step("Open the home page", async () => {
+      await homePage.open();
+      await homePage.expectLoaded();
+    });
 
-  await tripsPage.expectLoaded();
-});
+    await test.step("Click start planning", async () => {
+      await homePage.clickStartPlanning();
+    });
+    await test.step("Verify Trips page is displayed", async () => {
+      await tripsPage.expectLoaded();
+    });
+  });
 
-test("user can open a trip from the home page", async ({ page }) => {
-  const homePage = new HomePage(page);
-  const tripDetailsPage = new TripDetailsPage(page);
+  test("user can open a trip from the home page", async ({ homePage, tripDetailsPage }) => {
 
-  await homePage.open();
-  await homePage.expectLoaded();
+    await test.step("Open the home page", async () => {
+      await homePage.open();
+      await homePage.expectLoaded();
+    });
 
-  await homePage.openFirstTrip();
+    await test.step("Open the first trip", async () => {
+      await homePage.openFirstTrip();
+    });
 
-  await tripDetailsPage.expectTrip({
-    id: "1",
-    title: "Santorini, Greece",
-    dates: "Jun 14 – Jun 21, 2026",
-    summary: "Sunset dinners, cliffside villages, and a sail around the caldera.",
+    await test.step("Verify trip details", async () => {        
+
+      await tripDetailsPage.expectTrip({
+        id: "1",
+        title: "Santorini, Greece",
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Sunset dinners, cliffside villages, and a sail around the caldera.",
+      });
+    }); 
+  });
+
+  test("user sees Trip Not Found for an invalid trip", async ({ page, tripDetailsPage }) => {
+
+    await test.step("Open an invalid trip URL", async () => {
+      await page.goto("/trips/999");
+    });
+
+    await test.step("Verify Trip Not Found is displayed", async () => {
+      await tripDetailsPage.expectTripNotFound();
+    });
+  });
+  test("user can return to Trips from Trip Details", async ({ homePage, tripDetailsPage, tripsPage }) => {
+
+    await test.step("Open the home page", async () => {
+      await homePage.open();
+      await homePage.expectLoaded();
+    });
+
+    await test.step("Open the first trip", async () => {
+      await homePage.openFirstTrip();
+    });
+
+    await test.step("Return to Trips", async () => {
+      await tripDetailsPage.goBackToTrips();
+    });
+
+    await test.step("Verify Trips page is displayed", async () => {
+      await tripsPage.expectLoaded();
+    });
+
   });
 });
