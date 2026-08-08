@@ -49,4 +49,24 @@ test.describe("Navigation", () => {
       await tripDetailsPage.expectTripNotFound();
     });
   });
+  test("user can return to Trips from Trip Details", async ({ homePage, tripDetailsPage, tripsPage }) => {
+
+    await test.step("Open the home page", async () => {
+      await homePage.open();
+      await homePage.expectLoaded();
+    });
+
+    await test.step("Open the first trip", async () => {
+      await homePage.openFirstTrip();
+    });
+
+    await test.step("Return to Trips", async () => {
+      await tripDetailsPage.goBackToTrips();
+    });
+
+    await test.step("Verify Trips page is displayed", async () => {
+      await tripsPage.expectLoaded();
+    });
+
+  });
 });

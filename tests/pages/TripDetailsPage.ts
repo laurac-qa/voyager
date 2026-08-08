@@ -29,4 +29,9 @@ export class TripDetailsPage {
     })
   ).toBeVisible();
   }
+  async goBackToTrips() {
+  await this.page.getByRole("link", {
+    name: /Back to Trips/,
+  }).click();
+  }
 }
