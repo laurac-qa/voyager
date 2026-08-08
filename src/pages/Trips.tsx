@@ -1,9 +1,20 @@
-import { useMemo, useState } from "react";
-import { trips } from "../data/trips";
+import type { Trip } from "../types/trip";
+import { useEffect, useMemo, useState } from "react";
 import TripCard from "../components/TripCard";
 
 function Trips() {
   const [query, setQuery] = useState("");
+  const [trips, setTrips] = useState<Trip[]>([]);
+  useEffect(() => {
+    async function loadTrips() {
+        const response = await fetch("http://localhost:3001/api/trips");
+        const data = await response.json();
+
+        setTrips(data);
+    }
+
+    loadTrips();
+  }, []);
 
   const filteredTrips = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -16,7 +27,7 @@ function Trips() {
       const destinationText = trip.title.toLowerCase();
       return destinationText.includes(normalizedQuery);
     });
-  }, [query]);
+ }, [query, trips]);
 
   return (
     <section className="trips-page">
