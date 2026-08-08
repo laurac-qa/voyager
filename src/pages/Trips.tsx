@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { trips } from "../data/trips";
+import TripCard from "../components/TripCard";
 
 function Trips() {
   const [query, setQuery] = useState("");
@@ -34,11 +35,7 @@ function Trips() {
       {filteredTrips.length > 0 ? (
         <div className="trip-list">
           {filteredTrips.map((trip) => (
-            <article key={trip.id} className="trip-card">
-              <h3>{trip.title}</h3>
-              <p className="trip-dates">{trip.dates}</p>
-              <p className="trip-summary">{trip.summary}</p>
-            </article>
+            <TripCard key={trip.id} trip={trip} />
           ))}
         </div>
       ) : (
