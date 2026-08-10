@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const trips = [
   {
@@ -21,6 +22,31 @@ const trips = [
 
 app.get("/api/trips", (req, res) => {
   res.json(trips);
+});
+
+app.get("/api/trips/:tripId", (req, res) => {
+  const trip = trips.find((trip) => trip.id === req.params.tripId);
+
+  if (!trip) {
+    return res.status(404).json({
+      message: "Trip not found",
+    });
+  }
+
+  res.json(trip);
+});
+
+app.post("/api/trips", (req, res) => {
+  const newTrip = {
+    id: String(trips.length + 1),
+    title: req.body.title,
+    dates: req.body.dates,
+    summary: req.body.summary,
+  };
+
+  trips.push(newTrip);
+
+  res.status(201).json(newTrip);
 });
 
 const PORT = 3001;

@@ -1,16 +1,44 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { trips } from "../data/trips";
+import type { Trip } from "../types/trip";
+import { getTrip } from "../services/tripsApi";
 
 function TripDetails() {
   const { tripId } = useParams();
+  const [trip, setTrip] = useState<Trip | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
-  const trip = trips.find((trip) => trip.id === tripId);
+  useEffect(() => {
+    async function loadTrip() {
+      if (!tripId) {
+        setNotFound(true);
+        return;
+      }
 
-  if (!trip) {
+      try {
+        const data = await getTrip(tripId);
+        setTrip(data);
+      } catch {
+        setNotFound(true);
+      }
+    }
+
+    loadTrip();
+  }, [tripId]);
+
+  if (notFound) {
     return (
       <main className="trip-details">
         <h1>Trip Not Found</h1>
         <Link to="/trips">← Back to Trips</Link>
+      </main>
+    );
+  }
+
+  if (!trip) {
+    return (
+      <main className="trip-details">
+        <p>Loading trip...</p>
       </main>
     );
   }

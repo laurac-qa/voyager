@@ -1,4 +1,4 @@
-import { test } from "./fixtures";
+import { test, expect } from "./fixtures";
 
 test.describe("Navigation", () => {
 
@@ -38,6 +38,108 @@ test.describe("Navigation", () => {
       });
     }); 
   });
+  test("user can see the Create Trip action", async ({ homePage, tripsPage }) => {
+
+    await test.step("Open the Trips page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+    });
+
+    await test.step("Verify Create Trip action is available", async () => {
+      await tripsPage.expectCreateTripButton();
+    });
+
+  });
+  test("user can access Create Trip", async ({ homePage, tripsPage }) => {
+
+    await test.step("Open the Trips page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+    });
+
+    await test.step("Open Create Trip", async () => {
+      await tripsPage.clickCreateTrip();
+    });
+
+    await test.step("Verify Create Trip page", async () => {
+      await tripsPage.expectCreateTripPage();
+    });
+
+  });
+
+  test("user can see the Create Trip form", async ({
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Verify the form fields", async () => {
+      await createTripPage.expectFormFields();
+    });
+  });
+
+  test("user cannot submit an empty Create Trip form", async ({
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Verify required fields", async () => {
+      await createTripPage.expectRequiredFields();
+    });
+  });
+
+  test("user can create a trip", async ({
+    page,
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    const tripTitle = `Test Paris ${Date.now()}`;
+
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Fill in the trip details", async () => {
+      await createTripPage.fillTrip({
+        title: tripTitle,
+        dates: "Sep 10 – Sep 17, 2026",
+        summary: "QA test trip",
+      });
+    });
+
+    await test.step("Save the trip", async () => {
+      await createTripPage.clickSave();
+    });
+
+    await test.step("Verify the trip appears in My Trips", async () => {
+      await tripsPage.expectLoaded();
+      await expect(
+        page.getByRole("heading", { name: tripTitle })
+      ).toBeVisible();
+    });
+  });
 
   test("user sees Trip Not Found for an invalid trip", async ({ page, tripDetailsPage }) => {
 
@@ -68,5 +170,56 @@ test.describe("Navigation", () => {
       await tripsPage.expectLoaded();
     });
 
+  });
+
+  test("user sees an error when trip creation fails", async ({
+    page,
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    await test.step("Simulate trip creation failure", async () => {
+      await page.route("**/api/trips", async (route) => {
+        if (route.request().method() === "POST") {
+          await route.fulfill({
+            status: 500,
+            contentType: "application/json",
+            body: JSON.stringify({
+              message: "Internal Server Error",
+            }),
+          });
+        } else {
+          await route.continue();
+        }
+      });
+    });
+
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Fill in the trip details", async () => {
+      await createTripPage.fillTrip({
+        title: "API Failure Test",
+        dates: "Sep 10 – Sep 17, 2026",
+        summary: "Testing service failure handling.",
+      });
+    });
+
+    await test.step("Save the trip", async () => {
+      await createTripPage.clickSave();
+    });
+
+    await test.step("Verify the error message", async () => {
+      await expect(page.getByRole("alert")).toHaveText(
+        "Unable to create trip. Please try again."
+      );
+
+      await expect(page).toHaveURL("/trips/new");
+    });
   });
 });

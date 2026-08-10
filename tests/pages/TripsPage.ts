@@ -12,4 +12,22 @@ export class TripsPage {
       })
     ).toBeVisible();
   }
+  async expectCreateTripButton() {
+    await expect(
+      this.page.getByTestId("create-trip-button")
+    ).toBeVisible();
+  }
+  async clickCreateTrip() {
+  await this.page.getByRole("link", { name: "Create Trip" }).click();
+}
+
+async expectCreateTripPage() {
+  await expect(this.page).toHaveURL("/trips/new");
+
+  await expect(
+    this.page.getByRole("heading", {
+      name: "Create Trip",
+    })
+  ).toBeVisible();
+}
 }

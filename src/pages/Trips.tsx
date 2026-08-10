@@ -1,16 +1,16 @@
 import type { Trip } from "../types/trip";
 import { useEffect, useMemo, useState } from "react";
 import TripCard from "../components/TripCard";
+import { getTrips } from "../services/tripsApi";
+import { Link } from "react-router-dom";
 
 function Trips() {
   const [query, setQuery] = useState("");
   const [trips, setTrips] = useState<Trip[]>([]);
   useEffect(() => {
     async function loadTrips() {
-        const response = await fetch("http://localhost:3001/api/trips");
-        const data = await response.json();
-
-        setTrips(data);
+      const data = await getTrips();
+      setTrips(data);
     }
 
     loadTrips();
@@ -31,7 +31,12 @@ function Trips() {
 
   return (
     <section className="trips-page">
-      <h1>My Trips</h1>
+      <div className="trips-header">
+        <h1>My Trips</h1>
+        <Link to="/trips/new" className="create-trip-button" data-testid="create-trip-button">
+          Create Trip
+        </Link>
+      </div>
       <p className="trips-intro">Search your saved trips in real time.</p>
 
       <input
