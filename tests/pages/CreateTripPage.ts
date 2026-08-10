@@ -70,4 +70,29 @@ export class CreateTripPage {
   async expectFormNotSubmitted() {
     await expect(this.page).toHaveURL("/trips/new");
   }
+
+  async expectTitleMaxLength() {
+    const titleInput = this.page.getByLabel("Trip Title");
+
+    await titleInput.fill("A".repeat(101));
+
+    await expect(titleInput).toHaveValue("A".repeat(100));
+  }
+
+  async expectDatesMaxLength() {
+    const datesInput = this.page.getByLabel("Travel Dates");
+
+    await datesInput.fill("A".repeat(51));
+
+    await expect(datesInput).toHaveValue("A".repeat(50));
+  }
+
+  async expectSummaryMaxLength() {
+    const summaryInput = this.page.getByLabel("Trip Summary");
+
+    await summaryInput.fill("A".repeat(501));
+
+    await expect(summaryInput).toHaveValue("A".repeat(500));
+  }
 }
+

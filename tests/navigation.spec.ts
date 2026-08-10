@@ -222,4 +222,95 @@ test.describe("Navigation", () => {
       await expect(page).toHaveURL("/trips/new");
     });
   });
+
+  test("user cannot exceed the trip title length limit", async ({
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Verify the title length limit", async () => {
+      await createTripPage.expectTitleMaxLength();
+    });
+  });
+
+  test("user cannot exceed the travel dates length limit", async ({
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Verify the travel dates length limit", async () => {
+      await createTripPage.expectDatesMaxLength();
+    });
+  });
+
+  test("user cannot exceed the trip summary length limit", async ({
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Verify the trip summary length limit", async () => {
+      await createTripPage.expectSummaryMaxLength();
+    });
+  });
+
+  test("user can create a trip with Japanese characters", async ({
+    page,
+    homePage,
+    tripsPage,
+    createTripPage,
+  }) => {
+    const tripTitle = `京都旅行 ${Date.now()}`;
+
+    await test.step("Open the Create Trip page", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickCreateTrip();
+      await createTripPage.expectLoaded();
+    });
+
+    await test.step("Fill in Japanese trip details", async () => {
+      await createTripPage.fillTrip({
+        title: tripTitle,
+        dates: "2026年10月3日 – 2026年10月12日",
+        summary: "寺院、紅葉、そして美味しい料理を楽しむ旅行。",
+      });
+    });
+
+    await test.step("Save the trip", async () => {
+      await createTripPage.clickSave();
+    });
+
+    await test.step("Verify the Japanese trip appears", async () => {
+      await tripsPage.expectLoaded();
+
+      await expect(
+        page.getByRole("heading", { name: tripTitle })
+      ).toBeVisible();
+    });
+  });
 });

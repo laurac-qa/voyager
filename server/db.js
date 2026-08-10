@@ -1,6 +1,6 @@
 const Database = require("better-sqlite3");
 
-const db = new Database("voyager.db");
+const db = new Database(process.env.DB_FILE || "voyager.db");
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS trips (

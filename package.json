@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "node server/server.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server:test": "set DB_FILE=voyager-test.db&& node server/server.js"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",
