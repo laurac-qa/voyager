@@ -1,49 +1,38 @@
 import { test, expect } from "@playwright/test";
 
-test("API can create a trip", async ({ request }) => {
-  const response = await request.post("http://localhost:3001/api/trips", {
-    data: {
-      title: "Paris, France",
-      dates: "Sep 10 – Sep 17, 2026",
-      summary: "Museums, cafés, and walks along the Seine.",
-    },
-  });
+const API_URL = "http://localhost:3001/api/trips";
 
-  expect(response.status()).toBe(201);
-
-  const trip = await response.json();
-
-  expect(trip).toMatchObject({
-    title: "Paris, France",
+test("API can create and retrieve a trip", async ({ request }) => {
+  const tripData = {
+    title: `API Test Trip ${Date.now()}`,
     dates: "Sep 10 – Sep 17, 2026",
     summary: "Museums, cafés, and walks along the Seine.",
+  };
+
+  const createResponse = await request.post(API_URL, {
+    data: tripData,
   });
 
-  expect(trip.id).toBeTruthy();
-});
+  expect(createResponse.status()).toBe(201);
 
-test("API can get a trip by ID", async ({ request }) => {
-  const response = await request.get(
-    "http://localhost:3001/api/trips/1"
+  const createdTrip = await createResponse.json();
+
+  expect(createdTrip).toMatchObject(tripData);
+  expect(createdTrip.id).toBeTruthy();
+
+  const getResponse = await request.get(
+    `${API_URL}/${createdTrip.id}`
   );
 
-  expect(response.status()).toBe(200);
+  expect(getResponse.status()).toBe(200);
 
-  const trip = await response.json();
+  const retrievedTrip = await getResponse.json();
 
-  expect(trip).toMatchObject({
-    id: "1",
-    title: "Santorini, Greece",
-    dates: "Jun 14 – Jun 21, 2026",
-    summary:
-      "Sunset dinners, cliffside villages, and a sail around the caldera.",
-  });
+  expect(retrievedTrip).toEqual(createdTrip);
 });
 
 test("API returns 404 for an invalid trip ID", async ({ request }) => {
-  const response = await request.get(
-    "http://localhost:3001/api/trips/999"
-  );
+  const response = await request.get(`${API_URL}/999999`);
 
   expect(response.status()).toBe(404);
 
