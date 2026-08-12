@@ -44,6 +44,30 @@ app.post("/api/trips", (req, res) => {
   res.status(201).json(newTrip);
 });
 
+app.put("/api/trips/:tripId", (req, res) => {
+  const { title, dates, summary } = req.body;
+
+  const result = db
+    .prepare(`
+      UPDATE trips
+      SET title = ?, dates = ?, summary = ?
+      WHERE id = ?
+    `)
+    .run(title, dates, summary, req.params.tripId);
+
+  if (result.changes === 0) {
+    return res.status(404).json({
+      message: "Trip not found",
+    });
+  }
+
+  const updatedTrip = db
+    .prepare("SELECT * FROM trips WHERE id = ?")
+    .get(req.params.tripId);
+
+  res.json(updatedTrip);
+});
+
 const PORT = 3001;
 
 app.listen(PORT, () => {

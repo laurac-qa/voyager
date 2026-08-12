@@ -19,15 +19,33 @@ export class TripsPage {
   }
   async clickCreateTrip() {
   await this.page.getByRole("link", { name: "Create Trip" }).click();
-}
+  }
 
-async expectCreateTripPage() {
-  await expect(this.page).toHaveURL("/trips/new");
+  async expectEditTripButton(tripTitle: string) {
+    const tripCard = this.page
+      .locator("article")
+      .filter({ has: this.page.getByRole("heading", { name: tripTitle }) });
 
-  await expect(
-    this.page.getByRole("heading", {
-      name: "Create Trip",
-    })
-  ).toBeVisible();
-}
+    await expect(
+      tripCard.getByRole("link", { name: "Edit Trip" })
+    ).toBeVisible();
+  }
+
+  async clickEditTrip(tripTitle: string) {
+    const tripCard = this.page
+      .locator("article")
+      .filter({ has: this.page.getByRole("heading", { name: tripTitle }) });
+
+    await tripCard.getByRole("link", { name: "Edit Trip" }).click();
+  }
+
+  async expectCreateTripPage() {
+    await expect(this.page).toHaveURL("/trips/new");
+
+    await expect(
+      this.page.getByRole("heading", {
+        name: "Create Trip",
+      })
+    ).toBeVisible();
+  }
 }

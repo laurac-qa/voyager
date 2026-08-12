@@ -41,3 +41,26 @@ export async function createTrip(trip: {
 
   return response.json();
 }
+
+export async function updateTrip(
+  tripId: string,
+  trip: {
+    title: string;
+    dates: string;
+    summary: string;
+  }
+): Promise<Trip> {
+  const response = await fetch(`${API_URL}/trips/${tripId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(trip),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update trip");
+  }
+
+  return response.json();
+}
