@@ -74,6 +74,20 @@ body {
 
 .app-main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem 2rem;
+}
+
+.site-footer p {
+  margin: 0;
+  text-align: center;
+  color: var(--text);
 }
 
 .navbar {
@@ -287,9 +301,12 @@ body {
   color: var(--text-h);
   font-size: 1.2rem;
   min-height: 2.5em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  align-content: center;
   text-align: center;
 }
 
@@ -297,10 +314,14 @@ body {
   margin: 0;
   color: var(--accent);
   font-weight: 600;
-  min-height: 1.5em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 3em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  align-content: center;
+  text-align: center;
 }
 
 .trip-summary {
@@ -311,24 +332,97 @@ body {
 }
 
 .trip-button {
-  align-self: flex-start;
-  margin-top: auto;
-  padding: 0.6rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex-shrink: 0;
+  margin-top: 0;
+  padding: 0.7rem 1.1rem;
   border: none;
   border-radius: 999px;
   background: var(--accent);
   color: #fff;
   cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .trip-button:hover {
   background: #8f2ce8;
+  transform: translateY(-1px);
 }
 
+.trip-details-page {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.trip-details-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 2rem 2.25rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 20px;
+  background: rgba(170, 59, 255, 0.03);
+  box-shadow: var(--shadow);
+}
+
+.trip-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.trip-details-header h1 {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.12;
+}
+
+.trip-details-page .trip-dates {
+  margin: 0;
+  font-size: 1.05rem;
+  text-align: left;
+  min-height: auto;
+  line-height: 1.5;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.15rem 0 0.25rem;
+  border-bottom: 1px solid rgba(170, 59, 255, 0.18);
+}
+
+.trip-details-page .trip-summary {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text);
+  white-space: pre-line;
+  padding-top: 0.25rem;
+}
+
+.form-page,
 .create-trip-page {
   max-width: 760px;
   margin: 0 auto;
   padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .back-link {
@@ -441,4 +535,29 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+@media (max-width: 640px) {
+  .trip-details-page,
+  .create-trip-page,
+  .trips-page,
+  .hero,
+  .featured-trips {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .trip-details-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trip-button {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .trip-details-card {
+    padding: 1.25rem;
+  }
 }

@@ -109,6 +109,7 @@ test.describe("Responsive Layout", () => {
     request,
     homePage,
     tripsPage,
+    tripDetailsPage,
     editTripPage,
   }) => {
     await page.setViewportSize({
@@ -137,7 +138,18 @@ test.describe("Responsive Layout", () => {
       await homePage.open();
       await homePage.clickStartPlanning();
       await tripsPage.expectLoaded();
-      await tripsPage.clickEditTrip(tripTitle);
+
+      await tripsPage.clickViewTrip(tripTitle);
+
+      await tripDetailsPage.expectTrip({
+        id: String(trip.id),
+        title: tripTitle,
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Responsive edit test.",
+      });
+
+      await tripDetailsPage.clickEditTrip();
+
       await editTripPage.expectLoaded(trip.id);
     });
 

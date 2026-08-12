@@ -327,6 +327,7 @@ test.describe("Navigation", () => {
     request,
     homePage,
     tripsPage,
+    tripDetailsPage,
     editTripPage,
   }) => {
     const tripTitle = `Edit Test Trip ${Date.now()}`;
@@ -353,12 +354,25 @@ test.describe("Navigation", () => {
       await tripsPage.expectLoaded();
     });
 
+    await test.step("Open the trip details", async () => {
+      await tripsPage.clickViewTrip(tripTitle);
+    });
+
+    await test.step("Verify Trip Details page", async () => {
+      await tripDetailsPage.expectTrip({
+        id: String(trip.id),
+        title: tripTitle,
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Trip created for edit testing.",
+      });
+    });
+
     await test.step("Verify Edit Trip action", async () => {
-      await tripsPage.expectEditTripButton(tripTitle);
+      await tripDetailsPage.expectEditTripButton();
     });
 
     await test.step("Open Edit Trip", async () => {
-      await tripsPage.clickEditTrip(tripTitle);
+      await tripDetailsPage.clickEditTrip();
     });
 
     await test.step("Verify Edit Trip page", async () => {
@@ -412,6 +426,7 @@ test.describe("Navigation", () => {
     request,
     homePage,
     tripsPage,
+    tripDetailsPage,
     editTripPage,
   }) => {
     const tripTitle = `Edit Validation Trip ${Date.now()}`;
@@ -435,7 +450,17 @@ test.describe("Navigation", () => {
       await homePage.open();
       await homePage.clickStartPlanning();
       await tripsPage.expectLoaded();
-      await tripsPage.clickEditTrip(tripTitle);
+
+      await tripsPage.clickViewTrip(tripTitle);
+
+      await tripDetailsPage.expectTrip({
+        id: String(trip.id),
+        title: tripTitle,
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Trip created for validation testing.",
+      });
+
+      await tripDetailsPage.clickEditTrip();
       await editTripPage.expectLoaded(trip.id);
     });
 
@@ -471,6 +496,7 @@ test.describe("Navigation", () => {
     request,
     homePage,
     tripsPage,
+    tripDetailsPage,
     editTripPage,
   }) => {
     const tripTitle = `Edit API Failure ${Date.now()}`;
@@ -494,7 +520,17 @@ test.describe("Navigation", () => {
       await homePage.open();
       await homePage.clickStartPlanning();
       await tripsPage.expectLoaded();
-      await tripsPage.clickEditTrip(tripTitle);
+
+      await tripsPage.clickViewTrip(tripTitle);
+
+      await tripDetailsPage.expectTrip({
+        id: String(trip.id),
+        title: tripTitle,
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Trip created for API failure testing.",
+      });
+
+      await tripDetailsPage.clickEditTrip();
       await editTripPage.expectLoaded(trip.id);
     });
 

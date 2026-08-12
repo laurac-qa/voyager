@@ -28,7 +28,7 @@ function CreateTrip() {
   }
 
   return (
-    <main className="create-trip-page">
+    <main className="create-trip-page form-page">
       <Link to="/trips" className="back-link">
         ← Back to Trips
       </Link>

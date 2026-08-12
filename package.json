@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server:test": "set DB_FILE=voyager-test.db&& node server/server.js"
+    "reset:test-db": "node scripts/reset-test-db.js",
+    "server:test": "npm run reset:test-db && set DB_FILE=voyager-test.db&& node server/server.js"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",

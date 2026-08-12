@@ -28,42 +28,60 @@ function TripDetails() {
 
   if (notFound) {
     return (
-      <main className="trip-details">
-        <h1>Trip Not Found</h1>
-        <Link to="/trips">← Back to Trips</Link>
+      <main className="trip-details-page">
+        <section className="trip-details-card">
+          <Link to="/trips" className="back-link">
+            ← Back to Trips
+          </Link>
+          <h1>Trip Not Found</h1>
+        </section>
       </main>
     );
   }
 
   if (!trip) {
     return (
-      <main className="trip-details">
-        <p>Loading trip...</p>
+      <main className="trip-details-page">
+        <section className="trip-details-card">
+          <p>Loading trip...</p>
+        </section>
       </main>
     );
   }
 
   return (
-    <main className="trip-details">
-      <Link to="/trips" className="back-link">
-        ← Back to Trips
-      </Link>
+    <main className="trip-details-page">
+      <section className="trip-details-card">
+        <Link to="/trips" className="back-link">
+          ← Back to Trips
+        </Link>
 
-      <h1>{trip.title}</h1>
+        <div className="trip-details-header">
+          <h1>{trip.title}</h1>
 
-      <p
-        className="trip-dates"
-        data-testid="trip-dates"
-      >
-        {trip.dates}
-      </p>
+          <Link
+            to={`/trips/${trip.id}/edit`}
+            className="trip-button"
+            data-testid={`edit-trip-${trip.id}`}
+          >
+            Edit Trip
+          </Link>
+        </div>
 
-      <p
-        className="trip-summary"
-        data-testid="trip-summary"
-      >
-        {trip.summary}
-      </p>
+        <p
+          className="trip-dates"
+          data-testid="trip-dates"
+        >
+          {trip.dates}
+        </p>
+
+        <p
+          className="trip-summary"
+          data-testid="trip-summary"
+        >
+          {trip.summary}
+        </p>
+      </section>
     </main>
   );
 }

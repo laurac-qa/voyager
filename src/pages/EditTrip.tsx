@@ -60,8 +60,8 @@ function EditTrip() {
   }
 
   return (
-    <main>
-      <Link to="/trips">← Back to Trips</Link>
+    <main className="create-trip-page form-page">
+      <Link to="/trips" className="back-link">← Back to Trips</Link>
 
       <h1>Edit Trip</h1>
 

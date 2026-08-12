@@ -14,7 +14,7 @@ import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-    <div>
+    <div className="app-shell">
       <Navbar />
 
       <main className="app-main">

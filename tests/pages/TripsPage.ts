@@ -21,23 +21,6 @@ export class TripsPage {
   await this.page.getByRole("link", { name: "Create Trip" }).click();
   }
 
-  async expectEditTripButton(tripTitle: string) {
-    const tripCard = this.page
-      .locator("article")
-      .filter({ has: this.page.getByRole("heading", { name: tripTitle }) });
-
-    await expect(
-      tripCard.getByRole("link", { name: "Edit Trip" })
-    ).toBeVisible();
-  }
-
-  async clickEditTrip(tripTitle: string) {
-    const tripCard = this.page
-      .locator("article")
-      .filter({ has: this.page.getByRole("heading", { name: tripTitle }) });
-
-    await tripCard.getByRole("link", { name: "Edit Trip" }).click();
-  }
 
   async expectCreateTripPage() {
     await expect(this.page).toHaveURL("/trips/new");
@@ -47,5 +30,17 @@ export class TripsPage {
         name: "Create Trip",
       })
     ).toBeVisible();
+  }
+
+  async clickViewTrip(tripTitle: string) {
+    const tripCard = this.page
+      .locator("article")
+      .filter({
+        has: this.page.getByRole("heading", {
+          name: tripTitle,
+        }),
+      });
+
+    await tripCard.getByRole("link", { name: "View Trip" }).click();
   }
 }

@@ -12,7 +12,7 @@ function TripCard({ trip }: TripCardProps) {
       : trip.summary;
 
   return (
-    <article>
+    <article className="trip-card">
       <h3>{trip.title}</h3>
 
       <p className="trip-dates">
@@ -29,14 +29,6 @@ function TripCard({ trip }: TripCardProps) {
         data-testid={`view-trip-${trip.id}`}
       >
         View Trip
-      </Link>
-
-      <Link
-        to={`/trips/${trip.id}/edit`}
-        className="trip-button"
-        data-testid={`edit-trip-${trip.id}`}
-      >
-        Edit Trip
       </Link>
     </article>
   );
