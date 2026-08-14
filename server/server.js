@@ -68,6 +68,20 @@ app.put("/api/trips/:tripId", (req, res) => {
   res.json(updatedTrip);
 });
 
+app.delete("/api/trips/:tripId", (req, res) => {
+  const result = db
+    .prepare("DELETE FROM trips WHERE id = ?")
+    .run(req.params.tripId);
+
+  if (result.changes === 0) {
+    return res.status(404).json({
+      message: "Trip not found",
+    });
+  }
+
+  res.status(204).send();
+});
+
 const PORT = 3001;
 
 app.listen(PORT, () => {

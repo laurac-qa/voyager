@@ -59,4 +59,18 @@ export class TripDetailsPage {
       name: "Edit Trip",
     }).click();
   }
+
+  async expectDeleteTripButton() {
+    await expect(
+      this.page.getByRole("button", {
+        name: "Delete Trip",
+      })
+    ).toBeVisible();
+  }
+
+  async clickDeleteTrip() {
+    await this.page.getByRole("button", {
+      name: "Delete Trip",
+    }).click();
+  }
 }

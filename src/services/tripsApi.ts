@@ -64,3 +64,13 @@ export async function updateTrip(
 
   return response.json();
 }
+
+export async function deleteTrip(tripId: string): Promise<void> {
+  const response = await fetch(`${API_URL}/trips/${tripId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete trip");
+  }
+}

@@ -115,11 +115,15 @@ body {
 }
 
 .navbar a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-h);
   text-decoration: none;
   font-weight: 600;
   padding: 0.45rem 0.8rem;
-  border-radius: 999px;
+  border-radius: 10px;
+  line-height: 1.2;
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
@@ -172,15 +176,32 @@ body {
   color: var(--text);
 }
 
-.hero-button {
-  padding: 0.8rem 1.2rem;
+.hero-button,
+.create-trip-button,
+.trip-button,
+.create-trip-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.8rem;
   border: none;
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--accent);
   color: #fff;
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--shadow);
+  text-decoration: none;
+  line-height: 1.2;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.hero-button:hover,
+.create-trip-button:hover,
+.trip-button:hover,
+.create-trip-form button:hover {
+  background: #8f2ce8;
+  transform: translateY(-1px);
 }
 
 .hero-button:hover {
@@ -243,14 +264,19 @@ body {
 }
 
 .create-trip-button {
-  padding: 0.75rem 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.8rem;
   border: none;
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--accent);
   color: #fff;
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--shadow);
+  text-decoration: none;
+  line-height: 1.2;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -273,10 +299,12 @@ body {
   box-shadow: 0 0 0 3px rgba(170, 59, 255, 0.15);
 }
 
-.trip-list {
+.trip-list,
+.featured-trips {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: stretch;
 }
 
 .trip-empty {
@@ -288,12 +316,16 @@ body {
 .trip-card {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: 0.6rem;
+  height: 100%;
+  min-height: 320px;
   padding: 1.1rem 1.15rem;
   border: 1px solid var(--accent-border);
   border-radius: 16px;
   background: var(--accent-bg);
   box-shadow: var(--shadow);
+  box-sizing: border-box;
 }
 
 .trip-card h3 {
@@ -308,6 +340,12 @@ body {
   overflow: hidden;
   align-content: center;
   text-align: center;
+}
+
+.trip-card .trip-button {
+  width: 100%;
+  align-self: stretch;
+  margin-top: auto;
 }
 
 .trip-dates {
@@ -329,6 +367,7 @@ body {
   line-height: 1.4;
   color: var(--text);
   min-height: 3.3em;
+  flex: 1 1 auto;
 }
 
 .trip-button {
@@ -337,22 +376,55 @@ body {
   justify-content: center;
   align-self: center;
   flex-shrink: 0;
-  margin-top: 0;
-  padding: 0.7rem 1.1rem;
+  margin-top: auto;
+  padding: 0.45rem 0.8rem;
   border: none;
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--accent);
   color: #fff;
   cursor: pointer;
   text-decoration: none;
   font-weight: 700;
   white-space: nowrap;
+  line-height: 1.2;
+  box-shadow: var(--shadow);
   transition: background-color 0.2s ease, transform 0.2s ease;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .trip-button:hover {
   background: #8f2ce8;
   transform: translateY(-1px);
+}
+
+.trip-details-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.trip-button.secondary-button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  box-shadow: none;
+}
+
+.trip-button.secondary-button:hover {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.trip-button.danger-button {
+  background: #d92d2d;
+  box-shadow: 0 10px 22px rgba(217, 45, 45, 0.2);
+}
+
+.trip-button.danger-button:hover {
+  background: #b82424;
 }
 
 .trip-details-page {
@@ -425,6 +497,24 @@ body {
   box-sizing: border-box;
 }
 
+.delete-button {
+  background: #dc2626;
+}
+
+.delete-button:hover {
+  background: #b91c1c;
+}
+
+.form-error {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(217, 45, 45, 0.08);
+  border: 1px solid rgba(217, 45, 45, 0.2);
+  color: #8f1d1d;
+  font-weight: 600;
+}
+
 .back-link {
   display: inline-block;
   margin-bottom: 1.25rem;
@@ -469,6 +559,57 @@ body {
   box-shadow: 0 0 0 3px rgba(170, 59, 255, 0.12);
 }
 
+.delete-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(8, 6, 13, 0.45);
+  z-index: 50;
+}
+
+.delete-dialog {
+  width: min(100%, 420px);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(217, 45, 45, 0.2);
+  background: #fff;
+  box-shadow: 0 25px 60px rgba(8, 6, 13, 0.2);
+  text-align: left;
+}
+
+.delete-dialog-badge {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(217, 45, 45, 0.1);
+  color: #b82424;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.delete-dialog h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.7rem;
+}
+
+.delete-dialog p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
 .create-trip-form textarea {
   min-height: 120px;
   resize: vertical;
@@ -477,9 +618,9 @@ body {
 .create-trip-form button {
   align-self: flex-start;
   margin-top: 0.5rem;
-  padding: 0.85rem 1.4rem;
+  padding: 0.45rem 0.8rem;
   border: none;
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--accent);
   color: #fff;
   font-weight: 700;

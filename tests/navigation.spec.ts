@@ -1,7 +1,10 @@
 import { test, expect } from "./fixtures";
 
 test.describe("Navigation", () => {
-  test("user can start planning a trip", async ({ homePage, tripsPage }) => {
+  test("user can start planning a trip", async ({
+    homePage,
+    tripsPage,
+  }) => {
     await test.step("Open the home page", async () => {
       await homePage.open();
       await homePage.expectLoaded();
@@ -55,7 +58,10 @@ test.describe("Navigation", () => {
     });
   });
 
-  test("user can access Create Trip", async ({ homePage, tripsPage }) => {
+  test("user can access Create Trip", async ({
+    homePage,
+    tripsPage,
+  }) => {
     await test.step("Open the Trips page", async () => {
       await homePage.open();
       await homePage.clickStartPlanning();
@@ -563,6 +569,227 @@ test.describe("Navigation", () => {
       await expect(page.getByRole("alert")).toHaveText(
         "Unable to update trip. Please try again."
       );
+    });
+  });
+
+  test("user can cancel deleting a trip", async ({
+    page,
+    request,
+    homePage,
+    tripsPage,
+    tripDetailsPage,
+  }) => {
+    const tripTitle = `Delete Cancel Test ${Date.now()}`;
+
+    const createResponse = await request.post(
+      "http://localhost:3001/api/trips",
+      {
+        data: {
+          title: tripTitle,
+          dates: "Jun 14 – Jun 21, 2026",
+          summary: "Trip created for delete cancellation testing.",
+        },
+      }
+    );
+
+    expect(createResponse.status()).toBe(201);
+
+    const trip = await createResponse.json();
+
+    await test.step("Open the trip details", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickViewTrip(tripTitle);
+
+      await tripDetailsPage.expectTrip({
+        id: String(trip.id),
+        title: tripTitle,
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Trip created for delete cancellation testing.",
+      });
+    });
+
+    await test.step("Cancel the delete confirmation", async () => {
+      await tripDetailsPage.clickDeleteTrip();
+
+      await expect(
+        page.getByRole("heading", {
+          name: "Delete this trip?",
+        })
+      ).toBeVisible();
+
+      await page.getByLabel("Delete this trip?")
+        .getByRole("button", {
+          name: "Cancel",
+        })
+        .click();
+    });
+
+    await test.step("Verify the trip was not deleted", async () => {
+      await expect(
+        page.getByRole("heading", { name: tripTitle })
+      ).toBeVisible();
+
+      const response = await request.get(
+        `http://localhost:3001/api/trips/${trip.id}`
+      );
+
+      expect(response.status()).toBe(200);
+    });
+  });
+
+  test("user can delete a trip", async ({
+    page,
+    request,
+    homePage,
+    tripsPage,
+    tripDetailsPage,
+  }) => {
+    const tripTitle = `Delete Test Trip ${Date.now()}`;
+
+    const createResponse = await request.post(
+      "http://localhost:3001/api/trips",
+      {
+        data: {
+          title: tripTitle,
+          dates: "Jun 14 – Jun 21, 2026",
+          summary: "Trip created for delete testing.",
+        },
+      }
+    );
+
+    expect(createResponse.status()).toBe(201);
+
+    const trip = await createResponse.json();
+
+    await test.step("Open the trip details", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickViewTrip(tripTitle);
+
+      await tripDetailsPage.expectTrip({
+        id: String(trip.id),
+        title: tripTitle,
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Trip created for delete testing.",
+      });
+    });
+
+    await test.step("Confirm deletion", async () => {
+      await tripDetailsPage.clickDeleteTrip();
+
+      await expect(
+        page.getByRole("heading", {
+          name: "Delete this trip?",
+        })
+      ).toBeVisible();
+
+      await page.getByLabel("Delete this trip?")
+        .getByRole("button", {
+          name: "Delete Trip",
+        })
+        .click();
+    });
+
+    await test.step("Verify the trip was deleted", async () => {
+      await expect(page).toHaveURL("/trips");
+
+      await expect(
+        page.getByRole("heading", { name: tripTitle })
+      ).not.toBeVisible();
+
+      const response = await request.get(
+        `http://localhost:3001/api/trips/${trip.id}`
+      );
+
+      expect(response.status()).toBe(404);
+    });
+  });
+
+  test("user sees an error when trip deletion fails", async ({
+    page,
+    request,
+    homePage,
+    tripsPage,
+    tripDetailsPage,
+  }) => {
+    const tripTitle = `Delete API Failure ${Date.now()}`;
+
+    const createResponse = await request.post(
+      "http://localhost:3001/api/trips",
+      {
+        data: {
+          title: tripTitle,
+          dates: "Jun 14 – Jun 21, 2026",
+          summary: "Trip created for delete failure testing.",
+        },
+      }
+    );
+
+    expect(createResponse.status()).toBe(201);
+
+    const trip = await createResponse.json();
+
+    await test.step("Open the trip details", async () => {
+      await homePage.open();
+      await homePage.clickStartPlanning();
+      await tripsPage.expectLoaded();
+      await tripsPage.clickViewTrip(tripTitle);
+
+      await tripDetailsPage.expectTrip({
+        id: String(trip.id),
+        title: tripTitle,
+        dates: "Jun 14 – Jun 21, 2026",
+        summary: "Trip created for delete failure testing.",
+      });
+    });
+
+    await test.step("Simulate trip deletion failure", async () => {
+      await page.route("**/api/trips/*", async (route) => {
+        if (route.request().method() === "DELETE") {
+          await route.fulfill({
+            status: 500,
+            contentType: "application/json",
+            body: JSON.stringify({
+              message: "Internal Server Error",
+            }),
+          });
+        } else {
+          await route.continue();
+        }
+      });
+    });
+
+    await test.step("Confirm deletion", async () => {
+      await tripDetailsPage.clickDeleteTrip();
+
+      await expect(
+        page.getByRole("heading", {
+          name: "Delete this trip?",
+        })
+      ).toBeVisible();
+
+      await page.getByLabel("Delete this trip?")
+        .getByRole("button", {
+          name: "Delete Trip",
+        })
+        .click();
+    });
+
+    await test.step("Verify the error message", async () => {
+      await expect(page).toHaveURL(
+        `/trips/${trip.id}`
+      );
+
+      await expect(page.getByRole("alert")).toHaveText(
+        "Unable to delete trip. Please try again."
+      );
+
+      await expect(
+        page.getByRole("heading", { name: tripTitle })
+      ).toBeVisible();
     });
   });
 });

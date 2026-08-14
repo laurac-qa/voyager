@@ -99,3 +99,45 @@ test("API returns 404 when updating a trip that does not exist", async ({
   });
 });
 
+test("API can delete a trip", async ({ request }) => {
+  const createResponse = await request.post(`${API_URL}`, {
+    data: {
+      title: "Delete API Test",
+      dates: "Jun 14 – Jun 21, 2026",
+      summary: "Trip created for delete testing.",
+    },
+  });
+
+  expect(createResponse.status()).toBe(201);
+
+  const trip = await createResponse.json();
+
+  const deleteResponse = await request.delete(
+    `${API_URL}/${trip.id}`
+  );
+
+  expect(deleteResponse.status()).toBe(204);
+
+  const getResponse = await request.get(
+    `${API_URL}/${trip.id}`
+  );
+
+  expect(getResponse.status()).toBe(404);
+});
+
+test("API returns 404 when deleting a trip that does not exist", async ({
+  request,
+}) => {
+  const response = await request.delete(
+    `${API_URL}/999999`
+  );
+
+  expect(response.status()).toBe(404);
+
+  const body = await response.json();
+
+  expect(body).toEqual({
+    message: "Trip not found",
+  });
+});
+
