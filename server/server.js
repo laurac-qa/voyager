@@ -82,8 +82,8 @@ app.delete("/api/trips/:tripId", (req, res) => {
   res.status(204).send();
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
