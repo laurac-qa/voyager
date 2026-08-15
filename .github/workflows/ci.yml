@@ -10,7 +10,8 @@ on:
       - main
 
 jobs:
-  build:
+  ci:
+    name: Voyager CI
     runs-on: ubuntu-latest
 
     steps:
