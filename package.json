@@ -3,13 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "dev": "vite",
+  "server": "node server/server.js",
   "scripts": {
     "dev": "vite",
+    "server": "node server/server.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "reset:test-db": "node scripts/reset-test-db.js",
+    "server:test": "npm run reset:test-db && set DB_FILE=voyager-test.db&& node server/server.js"
   },
   "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2"

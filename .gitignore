@@ -13,3 +13,6 @@ blob-report/
 
 # Build output
 dist/
+
+# SQLite databases
+*.db

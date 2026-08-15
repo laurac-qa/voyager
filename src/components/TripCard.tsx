@@ -27,7 +27,7 @@ function TripCard({ trip }: TripCardProps) {
         to={`/trips/${trip.id}`}
         className="trip-button"
         data-testid={`view-trip-${trip.id}`}
-        >
+      >
         View Trip
       </Link>
     </article>

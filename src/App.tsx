@@ -8,6 +8,8 @@ import Trips from "./pages/Trips";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import TripDetails from "./pages/TripDetails";
+import CreateTrip from "./pages/CreateTrip";
+import EditTrip from "./pages/EditTrip";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -19,10 +21,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/trips" element={<Trips />} />
+          <Route path="/trips/new" element={<CreateTrip />} />
+          <Route path="/trips/:tripId/edit" element={<EditTrip />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/trips/:tripId" element={<TripDetails />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 

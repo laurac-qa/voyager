@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer>
+    <footer className="site-footer">
       <p>© 2026 Voyager</p>
     </footer>
   );
