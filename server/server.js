@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const db = require("./db");
 
 const app = express();
@@ -82,8 +83,18 @@ app.delete("/api/trips/:tripId", (req, res) => {
   res.status(204).send();
 });
 
-const PORT = 3001;
+app.use(express.static(path.join(__dirname, "../dist")));
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+app.use((req, res, next) => {
+  if (req.method !== "GET" || req.path.startsWith("/api/")) {
+    return next();
+  }
+
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
+
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });

@@ -1,6 +1,8 @@
 import type { Trip } from "../types/trip";
 
-const API_URL = "http://localhost:3001/api";
+const API_URL = import.meta.env.PROD
+  ? "/api"
+  : "http://localhost:3001/api";
 
 export async function getTrips(): Promise<Trip[]> {
   const response = await fetch(`${API_URL}/trips`);
